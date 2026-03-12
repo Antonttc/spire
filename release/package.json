@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node server/index.js",
-    "reset-db": "node server/reset_db.js"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
