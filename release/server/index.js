@@ -177,6 +177,9 @@ app.post('/api/settings', (req, res) => {
             return res.status(500).json({ error: err.message });
         }
         res.json({ message: 'Setting saved', key });
+    });
+});
+
 // Serve static files from the Vite build
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath));
