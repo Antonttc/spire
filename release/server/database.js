@@ -3,6 +3,13 @@ const path = require('path');
 
 const dbPath = process.env.DB_PATH || path.resolve(__dirname, 'database.sqlite');
 
+// Убедимся, что папка для базы существует (особенно важно для Volumes в Railway)
+const fs = require('fs');
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database', err.message);
