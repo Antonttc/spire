@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const dbPath = process.env.DB_PATH || path.resolve(__dirname, 'database.sqlite');
 
@@ -32,6 +33,23 @@ function initDb() {
                 console.error('Error creating users table', err.message);
             } else {
                 console.log('Users table ready.');
+                // Проверяем, есть ли пользователи. Если нет — создаем дефолтного админа.
+                db.get("SELECT COUNT(*) as count FROM users", (err, row) => {
+                    if (!err && row.count === 0) {
+                        const adminUser = 'admin';
+                        const adminPass = 'admin123!';
+                        bcrypt.hash(adminPass, 10, (err, hash) => {
+                            if (!err) {
+                                db.run("INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)", 
+                                    [adminUser, hash, 'admin'], 
+                                    (err) => {
+                                        if (!err) console.log('Default admin user created.');
+                                    }
+                                );
+                            }
+                        });
+                    }
+                });
             }
         });
 
